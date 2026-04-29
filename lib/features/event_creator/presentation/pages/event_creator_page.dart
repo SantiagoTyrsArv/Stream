@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -240,6 +241,39 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                     ),
                   );
                 }
+              );
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          StreamBuilder<Uint8List?>(
+            stream: _bloc.imageStream,
+            builder: (context, snapshot) {
+              final hasImage = snapshot.data != null;
+              return Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _bloc.pickImage,
+                      icon: Icon(hasImage ? Icons.image_search : Icons.add_photo_alternate_outlined),
+                      label: Text(hasImage ? 'Cambiar imagen' : 'Añadir imagen de fondo'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(0, 50),
+                        side: const BorderSide(color: Colors.white24),
+                      ),
+                    ),
+                  ),
+                  if (hasImage) ...[
+                    const SizedBox(width: 12),
+                    IconButton(
+                      onPressed: _bloc.removeImage,
+                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                      tooltip: 'Eliminar imagen',
+                    ),
+                  ],
+                ],
               );
             },
           ),

@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 /// Entidad inmutable que representa un evento.
@@ -9,6 +10,7 @@ class EventForm {
   final int capacity;
   final String category;
   final Color themeColor;
+  final Uint8List? imageBytes;
 
   const EventForm({
     required this.title,
@@ -18,6 +20,7 @@ class EventForm {
     required this.capacity,
     required this.category,
     required this.themeColor,
+    this.imageBytes,
   });
 
   EventForm copyWith({
@@ -28,6 +31,7 @@ class EventForm {
     int? capacity,
     String? category,
     Color? themeColor,
+    Uint8List? imageBytes,
   }) {
     return EventForm(
       title: title ?? this.title,
@@ -37,6 +41,7 @@ class EventForm {
       capacity: capacity ?? this.capacity,
       category: category ?? this.category,
       themeColor: themeColor ?? this.themeColor,
+      imageBytes: imageBytes ?? this.imageBytes,
     );
   }
 }

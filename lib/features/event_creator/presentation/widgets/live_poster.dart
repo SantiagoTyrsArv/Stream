@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -17,32 +18,49 @@ class LivePoster extends StatelessWidget {
       builder: (context, colorSnapshot) {
         final themeColor = colorSnapshot.data!;
 
-        return Container(
-          width: double.infinity,
-          height: 500,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                themeColor.withOpacity(0.8),
-                themeColor.withOpacity(0.3),
-                const Color(0xFF1C1C2E),
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: themeColor.withOpacity(0.2),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
+        return StreamBuilder<Uint8List?>(
+          stream: bloc.imageStream,
+          builder: (context, imageSnapshot) {
+            final imageBytes = imageSnapshot.data;
+
+            return Container(
+              width: double.infinity,
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                image: imageBytes != null
+                    ? DecorationImage(
+                        image: MemoryImage(imageBytes),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          themeColor.withOpacity(0.6),
+                          BlendMode.srcOver,
+                        ),
+                      )
+                    : null,
+                gradient: imageBytes == null
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          themeColor.withOpacity(0.8),
+                          themeColor.withOpacity(0.3),
+                          const Color(0xFF1C1C2E),
+                        ],
+                      )
+                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: themeColor.withOpacity(0.2),
+                    blurRadius: 30,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+                border: Border.all(
+                  color: themeColor.withOpacity(0.5),
+                  width: 1.5,
+                ),
               ),
-            ],
-            border: Border.all(
-              color: themeColor.withOpacity(0.5),
-              width: 1.5,
-            ),
-          ),
           child: Stack(
             children: [
               // Elementos decorativos de fondo
@@ -148,6 +166,8 @@ class LivePoster extends StatelessWidget {
               ),
             ],
           ),
+        );
+          },
         );
       },
     );

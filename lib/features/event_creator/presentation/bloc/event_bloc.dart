@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../domain/entities/event_form.dart';
 import '../../domain/usecases/publish_event.dart';
@@ -24,7 +26,7 @@ class EventBloc {
   final _capacityController = BehaviorSubject<String>();
   final _dateController = BehaviorSubject<DateTime?>();
   final _themeColorController = BehaviorSubject<Color>();
-
+  final _imageController = BehaviorSubject<Uint8List?>();
   // --- Sinks (Inputs) ---
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeDescription => _descriptionController.sink.add;
@@ -40,6 +42,21 @@ class EventBloc {
   Stream<DateTime?> get rawDateStream => _dateController.stream;
   Stream<String> get rawCapacityStream => _capacityController.stream;
   Stream<Color> get themeColorStream => _themeColorController.stream;
+  Stream<Uint8List?> get imageStream => _imageController.stream;
+
+  // --- Actions ---
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      _imageController.sink.add(bytes);
+    }
+  }
+
+  void removeImage() {
+    _imageController.sink.add(null);
+  }
 
   // --- Streams (Validated for Form fields) ---
   Stream<String> get titleStream =>
@@ -73,6 +90,7 @@ class EventBloc {
       capacity: int.tryParse(_capacityController.value) ?? 0,
       category: 'General', // Simplificado para el ejemplo
       themeColor: _themeColorController.value,
+      imageBytes: _imageController.hasValue ? _imageController.value : null,
     );
     return await _publishEvent(form);
   }
@@ -84,5 +102,6 @@ class EventBloc {
     _capacityController.close();
     _dateController.close();
     _themeColorController.close();
+    _imageController.close();
   }
 }
