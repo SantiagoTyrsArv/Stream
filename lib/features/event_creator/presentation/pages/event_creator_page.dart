@@ -6,6 +6,7 @@ import '../../core/event_strings.dart';
 import '../../data/datasources/event_remote_datasource.dart';
 import '../../data/repositories/event_repository_impl.dart';
 import '../../domain/usecases/publish_event.dart';
+import '../../../../core/settings_controller.dart';
 import '../bloc/event_bloc.dart';
 import '../widgets/live_poster.dart';
 
@@ -50,19 +51,6 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
       initialDate: DateTime.now().add(const Duration(days: 1)),
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFF6C63FF),
-              onPrimary: Colors.white,
-              surface: Color(0xFF1C1C2E),
-              onSurface: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
 
     if (pickedDate != null && mounted) {
@@ -90,7 +78,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
       final success = await _bloc.submit();
       if (mounted && success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(EventStrings.successTitle),
             backgroundColor: Colors.green,
           ),
@@ -107,14 +95,36 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
     // Determinar si es una pantalla ancha (Web/Desktop) o móvil
     final isDesktop = MediaQuery.of(context).size.width > 800;
 
-    return Scaffold(
+    return ListenableBuilder(
+      listenable: SettingsController(),
+      builder: (context, _) {
+        return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Creador de Eventos',
+          EventStrings.pageTitle,
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () {
+              final controller = SettingsController();
+              final nextLang = controller.language == AppLanguage.es 
+                  ? AppLanguage.en 
+                  : controller.language == AppLanguage.en 
+                      ? AppLanguage.fr 
+                      : AppLanguage.es;
+              controller.changeLanguage(nextLang);
+            },
+          ),
+          IconButton(
+            icon: Icon(SettingsController().themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () => SettingsController().toggleTheme(),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SafeArea(
         child: isDesktop
@@ -149,6 +159,8 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
               ),
       ),
     );
+      },
+    );
   }
 
   Widget _buildForm() {
@@ -158,11 +170,11 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Detalles del Evento',
+            EventStrings.detailsTitle,
             style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 24),
@@ -233,9 +245,9 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                       child: Text(
                         date != null
                             ? DateFormat('dd/MM/yyyy HH:mm').format(date)
-                            : 'Seleccionar fecha y hora',
+                            : EventStrings.selectDate,
                         style: TextStyle(
-                          color: date != null ? Colors.white : const Color(0xFF55556A),
+                          color: date != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).hintColor,
                         ),
                       ),
                     ),
@@ -257,11 +269,11 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                     child: OutlinedButton.icon(
                       onPressed: _bloc.pickImage,
                       icon: Icon(hasImage ? Icons.image_search : Icons.add_photo_alternate_outlined),
-                      label: Text(hasImage ? 'Cambiar imagen' : 'Añadir imagen de fondo'),
+                      label: Text(hasImage ? EventStrings.changeImage : EventStrings.addImage),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
+                        foregroundColor: Theme.of(context).colorScheme.onSurface,
                         minimumSize: const Size(0, 50),
-                        side: const BorderSide(color: Colors.white24),
+                        side: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.24)),
                       ),
                     ),
                   ),
@@ -270,7 +282,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                     IconButton(
                       onPressed: _bloc.removeImage,
                       icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                      tooltip: 'Eliminar imagen',
+                      tooltip: EventStrings.removeImageTooltip,
                     ),
                   ],
                 ],
@@ -285,7 +297,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF9090B0),
+              color: Theme.of(context).hintColor,
             ),
           ),
           const SizedBox(height: 12),
@@ -345,7 +357,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(EventStrings.publishBtn),
+                      : Text(EventStrings.publishBtn),
                 ),
               );
             },

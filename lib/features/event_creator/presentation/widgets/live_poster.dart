@@ -95,7 +95,7 @@ class LivePoster extends StatelessWidget {
                         border: Border.all(color: themeColor),
                       ),
                       child: Text(
-                        'EVENTO EXCLUSIVO',
+                        EventStrings.exclusiveBadge,
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class LivePoster extends StatelessWidget {
                     _buildDetailItem(
                       icon: Icons.people_alt_rounded,
                       stream: bloc.rawCapacityStream.map((cap) =>
-                          cap.isNotEmpty ? 'Aforo: $cap personas' : 'Aforo: ${EventStrings.posterCapacity}'),
+                          cap.isNotEmpty ? '${EventStrings.capacityPoster}: $cap ${EventStrings.persons}' : '${EventStrings.capacityPoster}: ${EventStrings.posterCapacity}'),
                       themeColor: themeColor,
                     ),
                   ],
