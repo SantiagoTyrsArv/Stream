@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'core/settings_controller.dart';
-import 'features/event_creator/presentation/pages/event_creator_page.dart';
+import 'features/splash/presentation/pages/splash_page.dart';
 
 /// Raíz de la aplicación.
 class App extends StatelessWidget {
@@ -18,7 +18,7 @@ class App extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: SettingsController().themeMode,
-          home: const EventCreatorPage(),
+          home: const SplashPage(),
         );
       },
     );

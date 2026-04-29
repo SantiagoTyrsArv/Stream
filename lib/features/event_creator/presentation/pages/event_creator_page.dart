@@ -9,8 +9,8 @@ import '../../domain/usecases/publish_event.dart';
 import '../../../../core/settings_controller.dart';
 import '../bloc/event_bloc.dart';
 import '../widgets/live_poster.dart';
-
 import '../widgets/stream_text_field.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 class EventCreatorPage extends StatefulWidget {
   const EventCreatorPage({super.key});
 
@@ -172,7 +172,10 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                       child: Center(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 450),
-                          child: LivePoster(bloc: _bloc),
+                          child: LivePoster(bloc: _bloc)
+                              .animate()
+                              .fade(duration: 500.ms)
+                              .scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOutQuad),
                         ),
                       ),
                     ),
@@ -184,7 +187,10 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(24.0),
-                      child: LivePoster(bloc: _bloc),
+                      child: LivePoster(bloc: _bloc)
+                          .animate()
+                          .fade(duration: 500.ms)
+                          .scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOutQuad),
                     ),
                     _buildForm(),
                   ],
@@ -396,7 +402,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
             },
           ),
           const SizedBox(height: 40),
-        ],
+        ].animate(interval: 50.ms).fade(duration: 400.ms, curve: Curves.easeOut).slideY(begin: 0.1),
       ),
     );
   }
