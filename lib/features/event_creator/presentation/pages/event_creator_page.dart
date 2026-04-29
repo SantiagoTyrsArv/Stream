@@ -194,31 +194,21 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
           ),
           const SizedBox(height: 16),
           
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: StreamTextField(
-                  stream: _bloc.locationStream,
-                  onChanged: _bloc.changeLocation,
-                  label: EventStrings.locationLabel,
-                  hint: EventStrings.locationHint,
-                  icon: Icons.location_on_outlined,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                flex: 1,
-                child: StreamTextField(
-                  stream: _bloc.capacityStream,
-                  onChanged: _bloc.changeCapacity,
-                  label: EventStrings.capacityLabel,
-                  hint: EventStrings.capacityHint,
-                  icon: Icons.people_outline,
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
+          StreamTextField(
+            stream: _bloc.locationStream,
+            onChanged: _bloc.changeLocation,
+            label: EventStrings.locationLabel,
+            hint: EventStrings.locationHint,
+            icon: Icons.location_on_outlined,
+          ),
+          const SizedBox(height: 16),
+          StreamTextField(
+            stream: _bloc.capacityStream,
+            onChanged: _bloc.changeCapacity,
+            label: EventStrings.capacityLabel,
+            hint: EventStrings.capacityHint,
+            icon: Icons.people_outline,
+            keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
 
