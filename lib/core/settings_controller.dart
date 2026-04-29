@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AppLanguage { es, en, fr }
+enum AppLanguage { es, en, fr, ru, zh, de, ja, it, la }
 
 class SettingsController extends ChangeNotifier {
   static final SettingsController _instance = SettingsController._internal();

@@ -107,17 +107,50 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
+          PopupMenuButton<AppLanguage>(
             icon: const Icon(Icons.language),
-            onPressed: () {
-              final controller = SettingsController();
-              final nextLang = controller.language == AppLanguage.es 
-                  ? AppLanguage.en 
-                  : controller.language == AppLanguage.en 
-                      ? AppLanguage.fr 
-                      : AppLanguage.es;
-              controller.changeLanguage(nextLang);
+            tooltip: 'Cambiar idioma',
+            onSelected: (AppLanguage language) {
+              SettingsController().changeLanguage(language);
             },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<AppLanguage>>[
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.es,
+                child: Text('🇪🇸 Español'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.en,
+                child: Text('🇬🇧 English'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.fr,
+                child: Text('🇫🇷 Français'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.ru,
+                child: Text('🇷🇺 Русский'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.zh,
+                child: Text('🇨🇳 简体中文'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.de,
+                child: Text('🇩🇪 Deutsch'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.ja,
+                child: Text('🇯🇵 日本語'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.it,
+                child: Text('🇮🇹 Italiano'),
+              ),
+              const PopupMenuItem<AppLanguage>(
+                value: AppLanguage.la,
+                child: Text('🏛️ Lingua Latina (Roma)'),
+              ),
+            ],
           ),
           IconButton(
             icon: Icon(SettingsController().themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
